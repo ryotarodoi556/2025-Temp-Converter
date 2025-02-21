@@ -22,8 +22,8 @@ class Converter:
         self.temp_heading.grid(row=0)
 
         instructions = ("Please enter a temperature below and then press "
-                       "one of the buttons to convert it from centigrade "
-                       "to Fahrenheit.")
+                        "one of the buttons to convert it from centigrade "
+                        "to Fahrenheit.")
         self.temp_instructions = Label(self.temp_frame,
                                        text=instructions,
                                        wraplength=250, width=40,
@@ -46,8 +46,8 @@ class Converter:
 
         # button list (button text | bg colour | command | row | column)
         button_details_list = [
-            ["To Celsius", "#990099", lambda:self.check_temp(c.ABS_ZERO_FAHRENHEIT), 0,0],
-            ["To Fahrenheit", "#009900", lambda:self.check_temp(c.ABS_ZERO_CELSIUS), 0, 1],
+            ["To Celsius", "#990099", lambda: self.check_temp(c.ABS_ZERO_FAHRENHEIT), 0, 0],
+            ["To Fahrenheit", "#009900", lambda: self.check_temp(c.ABS_ZERO_CELSIUS), 0, 1],
             ["Help / Info", "#CC6600", "", 1, 0],
             ["History / Export", "#004C99", "", 1, 1],
         ]
@@ -67,7 +67,7 @@ class Converter:
         # retrieve 'history / export' button and disable it at the start
         self.to_history_button = self.button_ref_list[3].config(state=DISABLED)
 
-    def check_temp(self,min_temp):
+    def check_temp(self, min_temp):
         """
         Checks temperature is valid and either invokes calculation
         function or shows a custom error
@@ -77,15 +77,18 @@ class Converter:
         to_convert = self.temp_entry.get()
 
         # reset label and entry box (if we had an error)
-        self.answer_error.config(fg="#004C99")
+        self.answer_error.config(fg="#004C99", font=("Arial", "13", "bold"))
         self.temp_entry.config(bg="#FFFFFF")
+
+        error = f"Enter a number more than / equal to {min_temp}"
+        has_errors = "no"
 
         # checks that amount to be converted is a number above absolute zero
         try:
             to_convert = float(to_convert)
             if to_convert >= min_temp:
                 error = ""
-                self.convert(min_temp)
+                self.convert(min_temp, to_convert)
             else:
                 error = "Too low"
 
@@ -98,12 +101,17 @@ class Converter:
             self.temp_entry.config(bg="#F4CCCC")
             self.temp_entry.delete(0, END)
 
-    def convert(self, min_temp):
+    def convert(self, min_temp, to_convert):
+        """
+        Converts temperatures adn updates answer label. Also stores
+        calculations for Export / History feature
+        """
 
         if min_temp == c.ABS_ZERO_CELSIUS:
-            self.answer_error.config(text="Converting to F")
+            self.answer_error.config(text=f"Converting {to_convert}°C to °F")
         else:
-            self.answer_error.config(text="Converting to C")
+            self.answer_error.config(text=f"Converting {to_convert}°F to °C")
+
 
 # main routine
 
